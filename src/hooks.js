@@ -72,3 +72,24 @@ export const useSearch = (query) => {
 
   return state;
 }
+
+export const useDebounce = (value, delay = 500) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  const handler = useRef();
+
+  useEffect(() => {
+    if (handler.current) {
+      clearTimeout(handler.current);
+    }
+
+    handler.current = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler.current);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};

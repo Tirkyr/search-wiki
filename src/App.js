@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import ReactAutocomplete from 'react-autocomplete';
-import { useSearch } from './hooks'; // Assuming hooks.js is in the same directory
+import { useSearch, useDebounce } from './hooks'; // Assuming hooks.js is in the same directory
 
 function App() {
   const [value, setValue] = useState('');
-  const { articles, status, error } = useSearch(value);
+  const { articles, status, error } = useSearch(useDebounce(value, 300));
 
   return (
     <>
