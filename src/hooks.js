@@ -9,21 +9,27 @@ export const useSearch = (query) => {
     error: ''
   });
 
-  const cancelToken = useRef(null);
+  // const cancelToken = useRef(null); // deprecated
+  const controller = useRef(null);
 
   useEffect(() => {
     if (query.lenght < 3) {
       return;
     }
 
-    if (cancelToken.current) {
-      cancelToken.current.cancel();
+    // if (cancelToken.current) {
+    //   cancelToken.current.cancel();
+    // } // deprecated
+    if (controller.current) {
+      controller.current.abort();
     }
 
-    cancelToken.current = axios.CancelToken.source();
+    // cancelToken.current = axios.CancelToken.source(); // deprecated
+    controller.current = new AbortController();
 
     axios.get(`https://en.wikipedia.org/w/api.php?origin=*&action=opensearch&search=${query}`, {
-      cancelToken: cancelToken.current.token,
+      // cancelToken: cancelToken.current.token,
+      signal: controller.current.signal,
     })
       .then(function (response) {
         const parsedResponse = [];
@@ -49,7 +55,10 @@ export const useSearch = (query) => {
         });
       })
       .catch(function (error) {
-        if (axios.isCancel(error)) {
+        // if (axios.isCancel(error)) {
+        //   return;
+        // } // deprecated
+        if (controller.current.signal.aborted) {
           return;
         }
         setState({
