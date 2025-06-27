@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactAutocomplete from 'react-autocomplete';
-import { useSearch, useDebounce } from './hooks'; // Assuming hooks.js is in the same directory
+import { useSearch, useDebounce } from './hooks';
+import Input from './components/Input';
 
 function App() {
   const [value, setValue] = useState('');
@@ -14,8 +15,19 @@ function App() {
       </div>}
       <ReactAutocomplete
         items={articles}
-        shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
+        renderInput={Input}
+        inputProps={{ placeholder: 'Input a search term: ' }}
         getItemValue={item => item.label}
+        renderMenu={(children, value, style) =>
+          <div style={{ ...style }} className='input-suggestions'>
+            {children}
+            {children.length !== 0 &&
+              <a href={`/search?query=${value}`} className='search-link'>
+                See all results
+              </a>
+            }
+          </div>
+        }
         renderItem={(item, highlighted) =>
           <div
             key={item.id}
