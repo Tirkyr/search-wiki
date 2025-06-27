@@ -33,7 +33,7 @@ export const useSearch = (query) => {
     })
       .then(function (response) {
         const parsedResponse = [];
-        if (query === '') {
+        if (query.trim() === '') {
           setState({
             articles: [],
             status: 'IDLE',
@@ -93,3 +93,14 @@ export const useDebounce = (value, delay = 500) => {
 
   return debouncedValue;
 };
+
+export const useSearchForm = () => {
+  const [searchValue, setSearchValue] = useState('');
+
+  const onSearchChange = (e) => setSearchValue(e.target.value);
+
+  return {
+    searchValue,
+    onSearchChange
+  };
+}

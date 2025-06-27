@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import ReactAutocomplete from 'react-autocomplete';
-import { useSearch, useDebounce } from './hooks';
+import { useSearch, useDebounce, useSearchForm } from './hooks';
 import Input from './components/Input';
 
 function App() {
-  const [value, setValue] = useState('');
-  const { articles, status, error } = useSearch(useDebounce(value, 300));
+  const { searchValue, onSearchChange } = useSearchForm();
+  const { articles, status, error } = useSearch(useDebounce(searchValue, 300));
 
   return (
     <>
@@ -36,9 +36,8 @@ function App() {
             {item.label}
           </div>
         }
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        onSelect={val => setValue(val)}
+        value={searchValue}
+        onChange={onSearchChange}
       />
     </>
   );
